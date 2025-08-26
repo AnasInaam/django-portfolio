@@ -25,5 +25,5 @@ else:
     print('Superuser already exists')
 EOF
 
-# Load sample data
-python manage.py populate_data
+# Load sample data (with error handling)
+python manage.py populate_data || echo "Warning: Sample data population failed, but continuing deployment"

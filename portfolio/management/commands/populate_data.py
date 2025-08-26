@@ -249,7 +249,11 @@ Helps users take control of their finances with intelligent insights and automat
                     'github_url': project_data['github_url'],
                     'live_url': project_data['live_url'],
                     'featured': project_data['featured'],
-                    'created_date': project_data['created_date']
+                    'created_date': project_data['created_date'],
+                    'bookmarks': 0,  # Default value for new field
+                    'challenges': '',  # Default value for new field
+                    'lessons_learned': '',  # Default value for new field
+                    'future_improvements': ''  # Default value for new field
                 }
             )
             
