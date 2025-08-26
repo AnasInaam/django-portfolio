@@ -10,13 +10,24 @@ from django.db.models import Q
 from .models import Project, Skill, Experience, Education, Profile, Contact
 from .forms import ContactForm
 import json
+from django.http import HttpResponse
+from django.urls import reverse
+
+# Simple caching placeholder (could integrate cache framework later)
 
 
 def home(request):
     """Home page view with featured projects and skills"""
     try:
         profile = Profile.objects.first()
-        featured_projects = Project.objects.filter(featured=True)[:3]
+        
+        # Get featured projects first, then fill with other projects if needed
+        featured_projects = Project.objects.filter(featured=True)[:6]
+        if featured_projects.count() < 3:
+            # If we don't have 3 featured projects, get additional projects to make at least 3
+            additional_projects = Project.objects.filter(featured=False)[:3-featured_projects.count()]
+            featured_projects = list(featured_projects) + list(additional_projects)
+        
         skills = Skill.objects.all()[:8]  # Top 8 skills
         experiences = Experience.objects.order_by('-start_date')[:3]  # Recent 3 experiences
         
@@ -349,9 +360,39 @@ def contact_stats(request):
             'unread_messages': unread_messages,
             'recent_messages': recent_data
         })
-        
     except Exception as e:
         return JsonResponse({
             'success': False,
             'message': str(e)
         })
+
+
+def sitemap_xml(request):
+    """Generate a basic sitemap.xml"""
+    urls = [
+        request.build_absolute_uri(reverse('home')),
+        request.build_absolute_uri(reverse('about')),
+        request.build_absolute_uri(reverse('projects')),
+        request.build_absolute_uri(reverse('contact')),
+    ]
+    # Add project detail pages
+    for project in Project.objects.all():
+        urls.append(request.build_absolute_uri(reverse('project_detail', args=[project.id])))
+    xml_parts = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    ]
+    for u in urls:
+        xml_parts.append('<url><loc>{}</loc></url>'.format(u))
+    xml_parts.append('</urlset>')
+    return HttpResponse('\n'.join(xml_parts), content_type='application/xml')
+
+
+def robots_txt(request):
+    """Return robots.txt"""
+    content = [
+        'User-agent: *',
+        'Disallow:',
+        f'Sitemap: {request.build_absolute_uri(reverse("sitemap"))}'
+    ]
+    return HttpResponse('\n'.join(content), content_type='text/plain')

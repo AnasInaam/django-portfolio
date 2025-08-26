@@ -11,7 +11,7 @@
             <div class="col-lg-4 text-center mb-4 mb-lg-0">
                 {% if profile.profile_image %}
                     <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" 
-                         class="img-fluid rounded-circle shadow-lg" style="max-width: 250px;">
+                         class="img-fluid rounded-circle shadow-lg" style="max-width: 250px;" loading="lazy" decoding="async">
                 {% else %}
                     <div class="placeholder-image bg-light rounded-circle d-inline-flex align-items-center justify-content-center text-primary" 
                          style="width: 250px; height: 250px;">
@@ -94,93 +94,83 @@
     </div>
 </section>
 
-<!-- Experience Section -->
-<section class="experience py-5">
+<!-- Experience / Journey Section -->
+<section class="experience py-5 position-relative">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <h2 class="section-title">Professional Experience</h2>
-                <p class="text-muted">My career journey</p>
+                <h2 class="section-title">My Journey</h2>
+                <p class="text-muted">Key milestones & professional growth</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                {% for experience in experiences %}
-                <div class="experience-item card mb-4 border-0 shadow-sm">
+        <div class="timeline-wrapper mx-auto">
+            <div class="timeline-line"></div>
+            {% for experience in experiences %}
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'1' }}00">
+                <div class="timeline-icon bg-primary text-white shadow-sm">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="timeline-content card border-0 shadow-sm">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
-                                <div class="text-primary fw-bold">{{ experience.start_date|date:"Y" }} - {% if experience.end_date %}{{ experience.end_date|date:"Y" }}{% else %}Present{% endif %}</div>
-                                {% if experience.location %}
-                                    <small class="text-muted">{{ experience.location }}</small>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-9">
-                                <h4 class="card-title h5 mb-1">{{ experience.position }}</h4>
-                                <h5 class="text-primary h6 mb-3">
-                                    {% if experience.company_url %}
-                                        <a href="{{ experience.company_url }}" target="_blank" class="text-decoration-none">
-                                            {{ experience.company }}
-                                        </a>
-                                    {% else %}
-                                        {{ experience.company }}
-                                    {% endif %}
-                                </h5>
-                                <p class="card-text">{{ experience.description }}</p>
-                            </div>
+                        <div class="d-flex justify-content-between flex-wrap mb-2">
+                            <span class="badge bg-primary-subtle text-primary fw-semibold mb-2">{{ experience.start_date|date:"Y" }} – {% if experience.end_date %}{{ experience.end_date|date:"Y" }}{% else %}Present{% endif %}</span>
+                            {% if experience.location %}<span class="text-muted small"><i class="fas fa-location-dot me-1"></i>{{ experience.location }}</span>{% endif %}
                         </div>
+                        <h4 class="h5 mb-1">{{ experience.position }}</h4>
+                        <h5 class="h6 text-primary mb-3">
+                            {% if experience.company_url %}
+                                <a href="{{ experience.company_url }}" target="_blank" class="text-decoration-none">{{ experience.company }}</a>
+                            {% else %}
+                                {{ experience.company }}
+                            {% endif %}
+                        </h5>
+                        <p class="mb-0 small text-muted">{{ experience.description|truncatewords:60 }}</p>
                     </div>
                 </div>
-                {% empty %}
-                <div class="text-center">
-                    <p class="text-muted">No work experience added yet.</p>
-                </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="text-center">
+                <p class="text-muted">No work experience added yet.</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Education Section -->
-<section class="education py-5 bg-light">
+<!-- Education / Academic Background -->
+<section class="education py-5 bg-light position-relative">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <h2 class="section-title">Education</h2>
-                <p class="text-muted">Academic background</p>
+                <h2 class="section-title">Academic Background</h2>
+                <p class="text-muted">Learning path & qualifications</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                {% for edu in education %}
-                <div class="education-item card mb-4 border-0 shadow-sm">
+        <div class="timeline-wrapper mx-auto timeline-education">
+            <div class="timeline-line"></div>
+            {% for edu in education %}
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:'1' }}00">
+                <div class="timeline-icon bg-success text-white shadow-sm">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="timeline-content card border-0 shadow-sm">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
-                                <div class="text-primary fw-bold">{{ edu.start_date|date:"Y" }} - {% if edu.end_date %}{{ edu.end_date|date:"Y" }}{% else %}Present{% endif %}</div>
-                                {% if edu.gpa %}
-                                    <small class="text-muted">GPA: {{ edu.gpa }}</small>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-9">
-                                <h4 class="card-title h5 mb-1">{{ edu.degree }}</h4>
-                                {% if edu.field_of_study %}
-                                    <h5 class="text-primary h6 mb-2">{{ edu.field_of_study }}</h5>
-                                {% endif %}
-                                <h6 class="text-muted mb-3">{{ edu.institution }}</h6>
-                                {% if edu.description %}
-                                    <p class="card-text">{{ edu.description }}</p>
-                                {% endif %}
-                            </div>
+                        <div class="d-flex justify-content-between flex-wrap mb-2">
+                            <span class="badge bg-success-subtle text-success fw-semibold mb-2">{{ edu.start_date|date:"Y" }} – {% if edu.end_date %}{{ edu.end_date|date:"Y" }}{% else %}Present{% endif %}</span>
+                            {% if edu.gpa %}<span class="text-muted small">GPA: {{ edu.gpa }}</span>{% endif %}
                         </div>
+                        <h4 class="h6 mb-1">{{ edu.degree }}</h4>
+                        {% if edu.field_of_study %}<div class="text-success fw-semibold small mb-1">{{ edu.field_of_study }}</div>{% endif %}
+                        <div class="text-muted small mb-2">{{ edu.institution }}</div>
+                        {% if edu.description %}<p class="mb-0 small text-muted">{{ edu.description|truncatewords:40 }}</p>{% endif %}
                     </div>
                 </div>
-                {% empty %}
-                <div class="text-center">
-                    <p class="text-muted">No education information added yet.</p>
-                </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="text-center">
+                <p class="text-muted">No education information added yet.</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

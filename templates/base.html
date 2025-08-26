@@ -23,8 +23,11 @@
     <meta property="twitter:image" content="{% block twitter_image %}{% if profile.profile_image %}{{ request.scheme }}://{{ request.get_host }}{{ profile.profile_image.url }}{% endif %}{% endblock %}">
     
     <title>{% block title %}DevPortfolio - Professional Web Developer{% endblock %}</title>
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     
-    <!-- Preload Critical Resources -->
+    <!-- Preconnect & Preload Critical Resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style">
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" as="style">
     
@@ -54,33 +57,32 @@
     <meta name="theme-color" content="#0d6efd" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0a58ca" media="(prefers-color-scheme: dark)">
     
-    {% block extra_css %}{% endblock %}
+        {% block extra_css %}{% endblock %}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Anas Inaam",
+            "jobTitle": "{{ profile.title|default:'Full Stack Developer' }}",
+            "url": "{{ request.build_absolute_uri }}",
+            {% if profile.github_url %}"sameAs": ["{{ profile.github_url }}"{% if profile.linkedin_url %}, "{{ profile.linkedin_url }}"{% endif %}{% if profile.twitter_url %}, "{{ profile.twitter_url }}"{% endif %}],{% endif %}
+            "description": "{{ profile.bio|default:'Full stack developer portfolio showcasing projects and skills.'|truncatechars:160 }}"
+        }
+        </script>
 </head>
 <body class="antialiased">
-    <!-- Loading Spinner -->
-    <div id="loading-spinner" class="loading-spinner">
-        <div class="spinner-container">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3 text-muted">Loading DevPortfolio...</p>
+    <a href="#main-content" class="visually-hidden-focusable skip-link position-absolute top-0 start-0 bg-primary text-white px-3 py-2 rounded-end" style="z-index:1050;transform:translateY(-120%);transition:transform .2s;">Skip to main content</a>
+    <!-- Loading Overlay (improved) -->
+    <div id="loading-screen" aria-hidden="true">
+        <div class="text-center text-white">
+            <div class="loading-spinner mb-3" aria-label="Loading"></div>
+            <div class="fw-semibold">Initializing Portfolio...</div>
         </div>
     </div>
-
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle" class="theme-toggle position-fixed" aria-label="Toggle dark/light mode" title="Toggle Theme">
-        <div class="theme-toggle-track">
-            <div class="theme-toggle-thumb">
-                <i class="fas fa-sun sun-icon"></i>
-                <i class="fas fa-moon moon-icon"></i>
-            </div>
-        </div>
-    </button>
 
     <!-- Back to Top Button -->
     <button id="back-to-top" class="back-to-top position-fixed" aria-label="Back to top" title="Back to Top">
         <i class="fas fa-chevron-up"></i>
-    </button>
     </button>
 
     <!-- Navigation -->
@@ -91,7 +93,7 @@
                     <i class="fas fa-code text-primary"></i>
                 </div>
                 <span class="brand-text fw-bold">
-                    {% if profile %}{{ profile.name }}{% else %}DevPortfolio{% endif %}
+                    Anas Inaam
                 </span>
             </a>
             
@@ -102,30 +104,35 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                           href="{% url 'home' %}">
+                                <a class="nav-link px-3 py-2 nav-item-custom {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+                                    href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
                             <i class="fas fa-home me-1"></i>Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
-                           href="{% url 'about' %}">
+                                <a class="nav-link px-3 py-2 nav-item-custom {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
+                                    href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>
                             <i class="fas fa-user me-1"></i>About
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'projects' %}active{% endif %}" 
-                           href="{% url 'projects' %}">
+                                <a class="nav-link px-3 py-2 nav-item-custom {% if request.resolver_match.url_name == 'projects' %}active{% endif %}" 
+                                    href="{% url 'projects' %}" {% if request.resolver_match.url_name == 'projects' %}aria-current="page"{% endif %}>
                             <i class="fas fa-folder-open me-1"></i>Projects
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-2 {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" 
-                           href="{% url 'contact' %}">
+                                <a class="nav-link px-3 py-2 nav-item-custom {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" 
+                                    href="{% url 'contact' %}" {% if request.resolver_match.url_name == 'contact' %}aria-current="page"{% endif %}>
                             <i class="fas fa-envelope me-1"></i>Contact
                         </a>
                     </li>
                     <li class="nav-item ms-2">
+                        <button id="theme-toggle-nav" class="btn btn-outline-secondary btn-sm me-2" title="Toggle Theme">
+                            <i class="fas fa-moon" id="theme-icon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
                         <a href="{% url 'contact' %}" class="btn btn-primary btn-sm rounded-pill px-3">
                             <i class="fas fa-paper-plane me-1"></i>Hire Me
                         </a>
@@ -136,45 +143,122 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="pt-5">
+    <main id="main-content" class="pt-5" tabindex="-1" role="main">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5" data-aos="fade-up">
+    <footer class="bg-dark text-light py-5 mt-5" data-aos="fade-up">
         <div class="container">
             <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="footer-brand mb-3">
+                        <h5 class="text-white">
+                            <i class="fas fa-code text-primary me-2"></i>
+                            Anas Inaam
+                        </h5>
+                        <p class="text-muted mb-3">
+                            Full Stack Developer passionate about creating innovative web solutions with modern technologies.
+                        </p>
+                        <div class="footer-stats row text-center">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h6 class="text-primary mb-0">5+</h6>
+                                    <small class="text-muted">Years Experience</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <h6 class="text-primary mb-0">50+</h6>
+                                    <small class="text-muted">Projects Completed</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="{% url 'home' %}" class="text-muted text-decoration-none">Home</a></li>
+                        <li><a href="{% url 'about' %}" class="text-muted text-decoration-none">About</a></li>
+                        <li><a href="{% url 'projects' %}" class="text-muted text-decoration-none">Projects</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-muted text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-white mb-3">Technologies</h6>
+                    <div class="footer-tech">
+                        <span class="badge bg-primary me-1 mb-1">Django</span>
+                        <span class="badge bg-success me-1 mb-1">Python</span>
+                        <span class="badge bg-info me-1 mb-1">JavaScript</span>
+                        <span class="badge bg-warning me-1 mb-1">React</span>
+                        <span class="badge bg-danger me-1 mb-1">HTML/CSS</span>
+                        <span class="badge bg-secondary me-1 mb-1">Bootstrap</span>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-white mb-3">Get In Touch</h6>
+                    <div class="footer-contact">
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            anas.inaam@example.com
+                        </p>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            Pakistan
+                        </p>
+                        <div class="social-links">
+                            {% if profile %}
+                                {% if profile.github_url %}
+                                    <a href="{{ profile.github_url }}" class="text-light me-3" target="_blank" rel="noopener noreferrer" 
+                                       data-bs-toggle="tooltip" title="GitHub">
+                                        <i class="fab fa-github fa-lg"></i>
+                                    </a>
+                                {% endif %}
+                                {% if profile.linkedin_url %}
+                                    <a href="{{ profile.linkedin_url }}" class="text-light me-3" target="_blank" rel="noopener noreferrer"
+                                       data-bs-toggle="tooltip" title="LinkedIn">
+                                        <i class="fab fa-linkedin fa-lg"></i>
+                                    </a>
+                                {% endif %}
+                                {% if profile.twitter_url %}
+                                    <a href="{{ profile.twitter_url }}" class="text-light me-3" target="_blank" rel="noopener noreferrer"
+                                       data-bs-toggle="tooltip" title="Twitter">
+                                        <i class="fab fa-twitter fa-lg"></i>
+                                    </a>
+                                {% endif %}
+                                {% if profile.website_url %}
+                                    <a href="{{ profile.website_url }}" class="text-light" target="_blank" rel="noopener noreferrer"
+                                       data-bs-toggle="tooltip" title="Website">
+                                        <i class="fas fa-globe fa-lg"></i>
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a href="#" class="text-light me-3"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#" class="text-light me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#" class="text-light me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                                <a href="#" class="text-light"><i class="fas fa-globe fa-lg"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4 border-secondary">
+            
+            <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p>&copy; {% now "Y" %} {% if profile %}{{ profile.name }}{% else %}DevPortfolio{% endif %}. All rights reserved.</p>
-                    <p class="small text-muted">Made with <i class="fas fa-heart text-danger"></i> using Django & Bootstrap</p>
+                    <p class="mb-0">&copy; {% now "Y" %} Anas Inaam. All rights reserved.</p>
+                    <p class="small text-muted mb-0">Made with <i class="fas fa-heart text-danger"></i> using Django & Bootstrap</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    {% if profile %}
-                        {% if profile.github_url %}
-                            <a href="{{ profile.github_url }}" class="text-light me-3" target="_blank" 
-                               data-bs-toggle="tooltip" title="GitHub">
-                                <i class="fab fa-github fa-lg"></i>
-                            </a>
-                        {% endif %}
-                        {% if profile.linkedin_url %}
-                            <a href="{{ profile.linkedin_url }}" class="text-light me-3" target="_blank"
-                               data-bs-toggle="tooltip" title="LinkedIn">
-                                <i class="fab fa-linkedin fa-lg"></i>
-                            </a>
-                        {% endif %}
-                        {% if profile.twitter_url %}
-                            <a href="{{ profile.twitter_url }}" class="text-light me-3" target="_blank"
-                               data-bs-toggle="tooltip" title="Twitter">
-                                <i class="fab fa-twitter fa-lg"></i>
-                            </a>
-                        {% endif %}
-                        {% if profile.website_url %}
-                            <a href="{{ profile.website_url }}" class="text-light" target="_blank"
-                               data-bs-toggle="tooltip" title="Website">
-                                <i class="fas fa-globe fa-lg"></i>
-                            </a>
-                        {% endif %}
-                    {% endif %}
+                    <p class="mb-0 text-white small">
+                        <i class="fas fa-code text-primary me-1"></i>
+                        Built with passion for excellence
+                    </p>
                 </div>
             </div>
         </div>

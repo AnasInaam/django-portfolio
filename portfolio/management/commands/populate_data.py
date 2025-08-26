@@ -18,21 +18,21 @@ class Command(BaseCommand):
 
         # Create Profile
         profile, created = Profile.objects.get_or_create(
-            name="John Doe",
+            name="Anas Inaam",
             defaults={
                 'title': "Full Stack Developer",
                 'bio': "Passionate full-stack developer with 5+ years of experience in creating robust web applications. Specialized in Python, Django, React, and modern web technologies. Love turning complex problems into simple, beautiful solutions.",
-                'email': "john.doe@example.com",
-                'phone': "+1 (555) 123-4567",
-                'location': "San Francisco, CA",
-                'linkedin_url': "https://linkedin.com/in/johndoe",
-                'github_url': "https://github.com/johndoe",
-                'twitter_url': "https://twitter.com/johndoe",
-                'website_url': "https://johndoe.dev",
+                'email': "anas.inaam@example.com",
+                'phone': "+92 (300) 123-4567",
+                'location': "Pakistan",
+                'linkedin_url': "https://linkedin.com/in/anas-inaam",
+                'github_url': "https://github.com/AnasInaam",
+                'twitter_url': "https://twitter.com/anas_inaam",
+                'website_url': "https://anas-inaam.dev",
             }
         )
         if created:
-            self.stdout.write(self.style.SUCCESS('Created profile for John Doe'))
+            self.stdout.write(self.style.SUCCESS('Created profile for Anas Inaam'))
 
         # Create Technologies (Skills)
         skills_data = [
@@ -98,8 +98,8 @@ class Command(BaseCommand):
 
 Built using Django REST Framework for the backend API, React for the frontend, PostgreSQL for data storage, and deployed on AWS with Docker containers.''',
                 'technologies': ['Python', 'Django', 'React', 'PostgreSQL', 'AWS'],
-                'github_url': 'https://github.com/johndoe/ecommerce-platform',
-                'live_url': 'https://ecommerce-demo.johndoe.dev',
+                'github_url': 'https://github.com/anasinaam/ecommerce-platform',
+                'live_url': 'https://ecommerce-demo.anasinaam.dev',
                 'featured': True,
                 'created_date': date.today() - timedelta(days=180)
             },
@@ -119,8 +119,8 @@ Built using Django REST Framework for the backend API, React for the frontend, P
 
 Developed with Django Channels for real-time features, Vue.js for the frontend, and Redis for caching and WebSocket support.''',
                 'technologies': ['Python', 'Django', 'JavaScript', 'PostgreSQL', 'Docker'],
-                'github_url': 'https://github.com/johndoe/task-manager',
-                'live_url': 'https://taskapp.johndoe.dev',
+                'github_url': 'https://github.com/anasinaam/task-manager',
+                'live_url': 'https://taskapp.anasinaam.dev',
                 'featured': True,
                 'created_date': date.today() - timedelta(days=120)
             },
@@ -140,8 +140,8 @@ Developed with Django Channels for real-time features, Vue.js for the frontend, 
 
 Built with Django for the backend, modern CSS with animations, and deployed on a cloud platform for optimal performance.''',
                 'technologies': ['Django', 'HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
-                'github_url': 'https://github.com/johndoe/portfolio',
-                'live_url': 'https://johndoe.dev',
+                'github_url': 'https://github.com/anasinaam/portfolio',
+                'live_url': 'https://anasinaam.dev',
                 'featured': False,
                 'created_date': date.today() - timedelta(days=60)
             },
@@ -161,10 +161,82 @@ Built with Django for the backend, modern CSS with animations, and deployed on a
 
 Integrated with multiple weather APIs for accurate data, featuring charts and graphs for data visualization, and includes geolocation support.''',
                 'technologies': ['React', 'Node.js', 'JavaScript', 'CSS3'],
-                'github_url': 'https://github.com/johndoe/weather-dashboard',
-                'live_url': 'https://weather.johndoe.dev',
+                'github_url': 'https://github.com/anasinaam/weather-dashboard',
+                'live_url': 'https://weather.anasinaam.dev',
                 'featured': False,
                 'created_date': date.today() - timedelta(days=90)
+            },
+            {
+                'title': 'Social Media Dashboard',
+                'short_description': 'Comprehensive social media analytics platform with real-time insights',
+                'description': '''A comprehensive social media analytics dashboard built with React and Node.js. Features real-time data visualization, user engagement tracking, and automated reporting. Integrates with multiple social platforms APIs.
+
+Key Features:
+• Real-time analytics and insights
+• Multi-platform integration (Twitter, Facebook, Instagram, LinkedIn)
+• Custom report generation and scheduling
+• Team collaboration tools
+• Performance tracking and KPI monitoring
+• Automated content suggestions
+• Competitor analysis tools
+• Advanced data visualization with interactive charts
+
+Built with modern technologies and scalable architecture, providing businesses with actionable insights to improve their social media strategy.''',
+                'technologies': ['React', 'Node.js', 'Express.js', 'MongoDB', 'Chart.js'],
+                'github_url': 'https://github.com/AnasInaam/social-dashboard',
+                'live_url': 'https://social-dashboard-anas.vercel.app',
+                'featured': True,
+                'created_date': date.today() - timedelta(days=30)
+            },
+            {
+                'title': 'AI-Powered Chat Application',
+                'short_description': 'Modern real-time chat with AI assistant integration',
+                'description': '''Modern real-time chat application with AI assistant integration. Built with Django Channels for WebSocket support, OpenAI API for intelligent responses, and Redis for caching. Features include group chats, file sharing, and smart notifications.
+
+Key Features:
+• Real-time messaging with WebSocket technology
+• AI assistant powered by OpenAI GPT
+• Group chat functionality with admin controls
+• File and media sharing capabilities
+• Smart notifications and mentions
+• Message encryption and security
+• User presence indicators
+• Chat history and search functionality
+• Emoji reactions and custom stickers
+• Voice message support
+
+Perfect for teams and communities looking for intelligent chat solutions with AI-powered assistance for productivity and engagement.''',
+                'technologies': ['Django', 'Python', 'Redis', 'WebSocket', 'JavaScript'],
+                'github_url': 'https://github.com/AnasInaam/ai-chat-app',
+                'live_url': 'https://ai-chat-anas.herokuapp.com',
+                'featured': True,
+                'created_date': date.today() - timedelta(days=20)
+            },
+            {
+                'title': 'Mobile Expense Tracker',
+                'short_description': 'Cross-platform mobile app for expense tracking and budget management',
+                'description': '''Cross-platform mobile application for expense tracking and budget management. Built with React Native and Firebase. Features include receipt scanning, category-wise analysis, spending alerts, and financial goal setting.
+
+Key Features:
+• Receipt scanning with OCR technology
+• Category-wise expense analysis
+• Budget setting and tracking
+• Spending alerts and notifications
+• Financial goal management
+• Multi-currency support
+• Data synchronization across devices
+• Visual reports and charts
+• Export functionality (PDF, CSV)
+• Biometric authentication
+• Offline mode support
+• Bank account integration
+
+Helps users take control of their finances with intelligent insights and automated expense categorization for better money management.''',
+                'technologies': ['React Native', 'Firebase', 'JavaScript', 'Mobile Development'],
+                'github_url': 'https://github.com/AnasInaam/expense-tracker-mobile',
+                'live_url': 'https://play.google.com/store/apps/details?id=com.anas.expensetracker',
+                'featured': False,
+                'created_date': date.today() - timedelta(days=10)
             }
         ]
 

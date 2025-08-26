@@ -16,4 +16,7 @@ urlpatterns = [
     path('api/skills/', views.skills_api, name='skills_api'),
     path('api/search/projects/', views.search_projects, name='search_projects'),
     path('api/contact/stats/', views.contact_stats, name='contact_stats'),
+    # SEO files
+    path('sitemap.xml', views.sitemap_xml, name='sitemap'),
+    path('robots.txt', views.robots_txt, name='robots'),
 ]

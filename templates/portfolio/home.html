@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ profile.name|default:"DevPortfolio" }} - Home{% endblock %}
+{% block title %}Anas Inaam - Home{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -17,7 +17,7 @@
                     </div>
                     
                     <h1 class="display-4 fw-bold mb-3">
-                        Hi, I'm <span class="text-primary">{{ profile.name|default:"John Doe" }}</span>
+                        Hi, I'm <span class="text-primary">Anas Inaam</span>
                     </h1>
                     
                     <div class="hero-subtitle mb-4">
@@ -74,7 +74,8 @@
                 <div class="hero-image text-center position-relative">
                     {% if profile.profile_image %}
                         <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" 
-                             class="img-fluid rounded-circle shadow-lg hero-profile-img">
+                             class="img-fluid rounded-circle shadow-lg hero-profile-img"
+                             loading="lazy" decoding="async" fetchpriority="high">
                     {% else %}
                         <div class="hero-placeholder bg-primary rounded-circle mx-auto shadow-lg d-flex align-items-center justify-content-center">
                             <i class="fas fa-user fa-5x text-white"></i>
@@ -140,13 +141,13 @@
                 <div class="section-divider mx-auto"></div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="featured-projects-grid" data-current-page="1" data-initial-count="{{ featured_projects|length }}">
             {% for project in featured_projects %}
-            <div class="col-lg-4 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4 project-item" data-project-id="{{ project.id }}">
                 <div class="project-card card h-100 border-0 shadow-sm">
                     <div class="project-image-wrapper position-relative overflow-hidden">
                         {% if project.image %}
-                            <img src="{{ project.image.url }}" class="card-img-top project-image" alt="{{ project.title }}">
+                            <img src="{{ project.image.url }}" class="card-img-top project-image" alt="{{ project.title }}" loading="lazy">
                         {% else %}
                             <div class="card-img-top bg-primary d-flex align-items-center justify-content-center text-white project-placeholder">
                                 <div class="text-center">
@@ -209,15 +210,21 @@
             </div>
             {% endfor %}
         </div>
-        {% if featured_projects %}
-        <div class="text-center mt-4">
-            <a href="{% url 'projects' %}" class="btn btn-primary btn-lg">
+        <div class="text-center mt-4 d-flex flex-column align-items-center gap-3">
+            {% if featured_projects %}
+            <a href="{% url 'projects' %}" class="btn btn-outline-primary btn-lg">
                 <i class="fas fa-folder-open me-2"></i>View All Projects
             </a>
+            {% endif %}
+            <button id="load-more-projects" class="btn btn-primary btn-lg px-4">
+                <span class="default-text"><i class="fas fa-plus me-2"></i>Load More</span>
+                <span class="loading-text d-none"><i class="fas fa-spinner fa-spin me-2"></i>Loading...</span>
+            </button>
+            <small class="text-muted" id="load-more-hint">Showing {{ featured_projects|length }} project(s)</small>
         </div>
-        {% endif %}
     </div>
 </section>
+
 
 <!-- Contact CTA -->
 <section class="contact-cta py-5 bg-primary text-white">
