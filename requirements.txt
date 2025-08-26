@@ -4,25 +4,20 @@ Django==5.1.2
 # Image handling for project images and profile pictures
 Pillow==10.4.0
 
-# Production server (optional)
+# Production server
 gunicorn==21.2.0
 
-# Database support (optional for PostgreSQL)
+# Database support for PostgreSQL (Render uses PostgreSQL)
 psycopg2-binary==2.9.7
 
 # Environment variable management
 python-decouple==3.8
 
-# Email backend for contact forms
-django-anymail==10.2
-
 # Static file serving for production
 whitenoise==6.6.0
 
-# Development tools
-django-debug-toolbar==4.2.0
+# Database URL parsing
+dj-database-url==2.1.0
 
 # Security and utilities
 django-cors-headers==4.3.1
-django-crispy-forms==2.1
-crispy-bootstrap5==0.7
