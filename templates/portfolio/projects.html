@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projects - {{ profile.name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<!-- Projects Header -->
+<section class="projects-header py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-5 fw-bold mb-3">My Projects</h1>
+                <p class="lead text-muted">A collection of my work and personal projects</p>
+            </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="filter-section text-center">
+                    <h5 class="mb-3">Filter by Technology:</h5>
+                    <div class="filter-buttons">
+                        <a href="{% url 'projects' %}" 
+                           class="btn {% if not current_filter %}btn-primary{% else %}btn-outline-primary{% endif %} me-2 mb-2">
+                            All Projects
+                        </a>
+                        {% for tech in technologies %}
+                            <a href="{% url 'projects' %}?tech={{ tech.name|urlencode }}" 
+                               class="btn {% if current_filter == tech.name %}btn-primary{% else %}btn-outline-primary{% endif %} me-2 mb-2">
+                                {{ tech.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="projects-grid py-5 bg-light">
+    <div class="container">
+        {% if current_filter %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <i class="fas fa-filter me-2"></i>
+                    Showing projects using <strong>{{ current_filter }}</strong>
+                    <a href="{% url 'projects' %}" class="btn btn-sm btn-outline-primary ms-2">Clear Filter</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="row">
+            {% for project in projects %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="project-card card h-100 border-0 shadow-sm">
+                    {% if project.image %}
+                        <div class="card-img-container position-relative overflow-hidden">
+                            <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}" 
+                                 style="height: 250px; object-fit: cover; transition: transform 0.3s;">
+                            <div class="card-img-overlay d-flex align-items-center justify-content-center opacity-0" 
+                                 style="background: rgba(0,0,0,0.7); transition: opacity 0.3s;">
+                                <div class="text-center">
+                                    <a href="{% url 'project_detail' project.id %}" class="btn btn-light me-2">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    {% if project.github_url %}
+                                        <a href="{{ project.github_url }}" class="btn btn-light me-2" target="_blank">
+                                            <i class="fab fa-github"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if project.live_url %}
+                                        <a href="{{ project.live_url }}" class="btn btn-light" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center text-white" 
+                             style="height: 250px;">
+                            <i class="fas fa-image fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ project.title }}</h5>
+                            {% if project.featured %}
+                                <span class="badge bg-warning text-dark">Featured</span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="card-text flex-grow-1">{{ project.short_description }}</p>
+                        
+                        <!-- Technologies -->
+                        <div class="technologies mb-3">
+                            {% for tech in project.technologies.all %}
+                                <span class="badge bg-primary me-1 mb-1">{{ tech.name }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Project Links -->
+                        <div class="card-actions mt-auto">
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-outline-primary btn-sm me-2">
+                                <i class="fas fa-eye me-1"></i>Details
+                            </a>
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" class="btn btn-outline-secondary btn-sm me-2" target="_blank">
+                                    <i class="fab fa-github me-1"></i>Code
+                                </a>
+                            {% endif %}
+                            {% if project.live_url %}
+                                <a href="{{ project.live_url }}" class="btn btn-success btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt me-1"></i>Live
+                                </a>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Project Date -->
+                        <small class="text-muted mt-2">
+                            <i class="fas fa-calendar me-1"></i>{{ project.created_date|date:"M Y" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="empty-state py-5">
+                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+                    <h3 class="text-muted">No Projects Found</h3>
+                    {% if current_filter %}
+                        <p class="text-muted">No projects found using {{ current_filter }}.</p>
+                        <a href="{% url 'projects' %}" class="btn btn-primary">View All Projects</a>
+                    {% else %}
+                        <p class="text-muted">Projects will appear here once they are added.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Project Stats -->
+{% if projects %}
+<section class="project-stats py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">{{ projects.count }}</h3>
+                    <p class="text-muted">Total Projects</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">{{ technologies.count }}</h3>
+                    <p class="text-muted">Technologies Used</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">{% now "Y"|add:"-2020" %}</h3>
+                    <p class="text-muted">Years Experience</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">∞</h3>
+                    <p class="text-muted">Lines of Code</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="cta-section py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mb-3">Have a Project in Mind?</h2>
+                <p class="lead mb-4">
+                    I'm always excited to work on new and challenging projects. Let's discuss your ideas!
+                </p>
+                <a href="{% url 'contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>Start a Conversation
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.project-card:hover .card-img-container img {
+    transform: scale(1.05);
+}
+
+.project-card:hover .card-img-overlay {
+    opacity: 1 !important;
+}
+
+.project-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+</style>
+{% endblock %}
