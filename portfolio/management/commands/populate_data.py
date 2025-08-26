@@ -249,7 +249,17 @@ Helps users take control of their finances with intelligent insights and automat
                     'github_url': project_data['github_url'],
                     'live_url': project_data['live_url'],
                     'featured': project_data['featured'],
-                    'created_date': project_data['created_date']
+                    'created_date': project_data['created_date'],
+                    'bookmarks': 0,
+                    'challenges': 'Initial development challenges included architecture decisions and technology selection.',
+                    'demo_available': True,
+                    'duration': '3 months',
+                    'learned': 'Gained valuable experience in full-stack development and project management.',
+                    'likes': 0,
+                    'my_role': 'Full Stack Developer',
+                    'status': 'completed',
+                    'team_size': 1,
+                    'views': 0
                 }
             )
             

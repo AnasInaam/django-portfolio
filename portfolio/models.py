@@ -34,6 +34,23 @@ class Project(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     updated_date = models.DateTimeField(auto_now=True)
     
+    # Additional fields from migration
+    bookmarks = models.PositiveIntegerField(default=0)
+    challenges = models.TextField(blank=True, help_text='Key challenges faced and solutions')
+    demo_available = models.BooleanField(default=False)
+    duration = models.CharField(max_length=50, blank=True, help_text='e.g., 3 months, 2 weeks')
+    learned = models.TextField(blank=True, help_text='What was learned from this project')
+    likes = models.PositiveIntegerField(default=0)
+    my_role = models.CharField(max_length=100, blank=True)
+    status = models.CharField(max_length=20, choices=[
+        ('completed', 'Completed'),
+        ('in_progress', 'In Progress'),
+        ('maintained', 'Maintained'),
+        ('archived', 'Archived')
+    ], default='completed')
+    team_size = models.PositiveIntegerField(blank=True, null=True)
+    views = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         return self.title
     
@@ -90,6 +107,58 @@ class Contact(models.Model):
     
     class Meta:
         ordering = ['-created_date']
+
+
+class ProjectComment(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"Comment by {self.name} on {self.project.title}"
+    
+    class Meta:
+        ordering = ['-created_at']
+
+
+class ProjectBookmark(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_bookmarks')
+    session_key = models.CharField(max_length=40)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Bookmark for {self.project.title}"
+    
+    class Meta:
+        unique_together = ('project', 'session_key')
+
+
+class ProjectLike(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_likes')
+    ip_address = models.GenericIPAddressField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Like for {self.project.title}"
+    
+    class Meta:
+        unique_together = ('project', 'ip_address')
+
+
+class ProjectRating(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ratings')
+    ip_address = models.GenericIPAddressField()
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Rating {self.rating} for {self.project.title}"
+    
+    class Meta:
+        unique_together = ('project', 'ip_address')
 
 
 class Profile(models.Model):
