@@ -2,6 +2,9 @@
 # exit on error
 set -o errexit
 
+# Make script executable
+chmod +x build.sh
+
 # Install Python dependencies
 pip install -r requirements.txt
 
