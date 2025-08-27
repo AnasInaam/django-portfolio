@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 'bio': "Passionate full-stack developer with 5+ years of experience in creating robust web applications. Specialized in Python, Django, React, and modern web technologies. Love turning complex problems into simple, beautiful solutions.",
                 'email': "anas.inaam@example.com",
                 'phone': "+92 (300) 123-4567",
-                'location': "Pakistan",
+                'location': "India",
                 'linkedin_url': "https://linkedin.com/in/anas-inaam",
                 'github_url': "https://github.com/AnasInaam",
                 'twitter_url': "https://twitter.com/anas_inaam",
